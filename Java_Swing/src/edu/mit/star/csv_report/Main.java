@@ -1,5 +1,6 @@
 package edu.mit.star.csv_report;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.lang.reflect.InvocationTargetException;
 
@@ -11,12 +12,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import java.awt.event.*;
+
+//Modified by Shloka Kini
+
 public class Main extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	JTextArea input;
 	JButton calculate;
 	JPanel report;
+	JTextArea info_from_file = new JTextArea();
 
 	@Override
 	public void addNotify()
@@ -32,6 +38,25 @@ public class Main extends JFrame
 		c.add(input);
 		c.add(calculate);
 		c.add(report);
+
+		report.add(info_from_file);
+		
+		//This adds an action listener for the jbutton calculate
+		calculate.addActionListener(new ActionListener() {
+			  public void actionPerformed(ActionEvent evt) {
+				  
+				  String s = input.getText();
+				  //Resets input to empty
+				  input.setText("");
+				  //Creates a report object and populates table
+				  Report newRep = new Report(s);
+				  newRep.populateTable();
+				  //sets output string with formatted records
+				  s = newRep.getRecords();
+				  info_from_file.setText(s);
+				  
+			  }
+		});
 	}
 
 	public static void main(String[] args)

@@ -2,9 +2,53 @@
 <html>
     <head>
         <title>CSV Report</title>
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" ></script>
+        
+       
     </head>
     <body>
+        <script>
+            var table = {};
+            function createTable(records){
+            for (var i =0; i<records.length; i++){
+                    fields = records[i].split(",");
+                    var name = fields[0];
+                    var time = fields[1];
+                    if (table[name] != undefined){
+                        var temp = table[name][0]+1;
+                        var average = (parseInt(table[name][1])+parseInt(time))/temp;
+                        table[name] = [temp, average];
+                    }
+                    else{
+                        table[name] = [1, parseInt(time)];
+                    }
+                }
+            }
+            function createOutput(){
+                var output = "";
+                for (var key in table){
+                
+                    output= output+"Name: "+ key+"/Number of Events Attended: " + table[key][0] + "/Average time spent: " + parseInt(table[key][1]) + "<br/>";
+                }
+                return output
+                    
+            }
+            $(function() {
+				//on a button click, create a table 
+				//and print the results 
+				
+				$('#calculate').click(function(){
+				    var x = $('#input').val().toString();
+				    x = x.trim();
+				    var split_records = x.split("\n");
+				    createTable(split_records);
+				    var string = createOutput();
+					$('#report').html("" + string);
+					table={}
+				});
+			});
+        </script>
         <h1>CSV Report</h1>
         <p>Input:</p>
         <textarea id='input' cols="40" rows="12">
